@@ -62,7 +62,7 @@ public class GoBackWithAssignedKey : MonoBehaviour
 
         if (Input.GetKeyDown(keyCode))
         {
-            SceneManager.LoadScene("Scene1");
+            SceneManager.LoadScene("Scene10");
         }
     }
 }

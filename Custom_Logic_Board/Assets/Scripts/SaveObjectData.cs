@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class SaveObjectData : MonoBehaviour
@@ -53,7 +54,7 @@ public class SaveObjectData : MonoBehaviour
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(Application.persistentDataPath + "/data.json", json);
 
-        Debug.Log("Data saved successfully.");
         
+        SceneManager.LoadScene("Scene10");
     }
 }

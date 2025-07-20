@@ -15,7 +15,7 @@ public class SaveObjectData : MonoBehaviour
 
     public void SaveData()
     {
-       
+
         if (string.IsNullOrWhiteSpace(PrefabNameInput.text) ||
             string.IsNullOrWhiteSpace(PosXInput.text) ||
             string.IsNullOrWhiteSpace(PosYInput.text) ||
@@ -32,7 +32,7 @@ public class SaveObjectData : MonoBehaviour
             return;
         }
 
-       
+
         float x = float.Parse(PosXInput.text);
         float y = float.Parse(PosYInput.text);
         float z = float.Parse(PosZInput.text);
@@ -58,4 +58,5 @@ public class SaveObjectData : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath + "/data.json", json);
         SceneManager.LoadScene("Scene2");
     }
+    
 }

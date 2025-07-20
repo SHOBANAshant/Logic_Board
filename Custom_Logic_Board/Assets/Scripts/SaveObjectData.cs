@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
-using UnityEngine.SceneManagement;
 using TMPro;
-
 
 public class SaveObjectData : MonoBehaviour
 {
@@ -15,7 +13,6 @@ public class SaveObjectData : MonoBehaviour
 
     public void SaveData()
     {
-
         if (string.IsNullOrWhiteSpace(PrefabNameInput.text) ||
             string.IsNullOrWhiteSpace(PosXInput.text) ||
             string.IsNullOrWhiteSpace(PosYInput.text) ||
@@ -31,7 +28,6 @@ public class SaveObjectData : MonoBehaviour
             Debug.LogError("One or more fields are empty. Please fill all fields before proceeding.");
             return;
         }
-
 
         float x = float.Parse(PosXInput.text);
         float y = float.Parse(PosYInput.text);
@@ -56,7 +52,8 @@ public class SaveObjectData : MonoBehaviour
 
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(Application.persistentDataPath + "/data.json", json);
-        SceneManager.LoadScene("Scene2");
+
+        Debug.Log("Data saved successfully.");
+        
     }
-    
 }

@@ -10,7 +10,7 @@ public class SaveObjectData : MonoBehaviour
     public TMP_InputField PosXInput, PosYInput, PosZInput;
     public TMP_InputField RotXInput, RotYInput, RotZInput;
     public TMP_InputField ScaleXInput, ScaleYInput, ScaleZInput;
-    public TMP_InputField KeyInput;
+   
 
     public void SaveData()
     {
@@ -23,8 +23,8 @@ public class SaveObjectData : MonoBehaviour
             string.IsNullOrWhiteSpace(RotZInput.text) ||
             string.IsNullOrWhiteSpace(ScaleXInput.text) ||
             string.IsNullOrWhiteSpace(ScaleYInput.text) ||
-            string.IsNullOrWhiteSpace(ScaleZInput.text) ||
-            string.IsNullOrWhiteSpace(KeyInput.text))
+            string.IsNullOrWhiteSpace(ScaleZInput.text) 
+            )
         {
             Debug.LogError("One or more fields are empty. Please fill all fields before proceeding.");
             return;
@@ -48,7 +48,7 @@ public class SaveObjectData : MonoBehaviour
             position = new Vector3(x, y, z),
             rotation = new Vector3(rx, ry, rz),
             scale = new Vector3(sx, sy, sz),
-            returnKey = KeyInput.text.ToLower()
+            returnKey = ""  
         };
 
         string json = JsonUtility.ToJson(data);

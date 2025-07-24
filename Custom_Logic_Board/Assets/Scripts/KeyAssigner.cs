@@ -4,8 +4,9 @@ using System.IO;
 
 public class KeyAssigner : MonoBehaviour
 {
-    public GameObject promptPanel;         // Panel that says "Press any key"
+    public GameObject promptPanel;         
     public TMP_Text promptText;
+    public GameObject modulesPanel;        
     private bool isListening = false;
 
     private string prefabPath => Application.persistentDataPath + "/data.json";
@@ -15,6 +16,11 @@ public class KeyAssigner : MonoBehaviour
         promptPanel.SetActive(true);
         promptText.text = "Press any key to assign return key";
         isListening = true;
+
+        if (modulesPanel != null)
+        {
+            modulesPanel.SetActive(false); 
+        }
     }
 
     void Update()
@@ -41,8 +47,7 @@ public class KeyAssigner : MonoBehaviour
             string json = File.ReadAllText(prefabPath);
             ObjectData data = JsonUtility.FromJson<ObjectData>(json);
 
-            data.returnKey = key.ToString();  // Save as string like "A", "Space", etc.
-
+            data.returnKey = key.ToString();  
             string updatedJson = JsonUtility.ToJson(data);
             File.WriteAllText(prefabPath, updatedJson);
 
@@ -56,11 +61,16 @@ public class KeyAssigner : MonoBehaviour
         }
 
         isListening = false;
-        Invoke("HidePrompt", 1.5f); // Hide after 1.5 sec
+        Invoke("HidePrompt", 1.5f); 
     }
 
     private void HidePrompt()
     {
         promptPanel.SetActive(false);
+
+        if (modulesPanel != null)
+        {
+            modulesPanel.SetActive(true); 
+        }
     }
 }

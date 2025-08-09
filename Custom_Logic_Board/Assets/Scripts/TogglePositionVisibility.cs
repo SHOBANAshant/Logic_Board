@@ -11,10 +11,10 @@ public class TogglePositionVisibility : MonoBehaviour
 
     void Awake()
     {
-        // Make sure toggle is unchecked at start
+      
         positionToggle.isOn = false;
 
-        // Set initial visibility
+        
         ApplyToggleState(false);
     }
 

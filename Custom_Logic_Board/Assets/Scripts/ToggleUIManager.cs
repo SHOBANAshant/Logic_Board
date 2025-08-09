@@ -9,7 +9,7 @@ public class ToggleUIManager : MonoBehaviour
     void Start()
     {
         positionToggle.onValueChanged.AddListener(OnPositionToggleChanged);
-        positionPanel.SetActive(false); // Hide on start
+        positionPanel.SetActive(false); 
     }
 
     void OnPositionToggleChanged(bool isOn)

@@ -11,10 +11,10 @@ public class ToggleScaleVisibility : MonoBehaviour
 
     void Awake()
     {
-        // Ensure toggle starts unchecked
+     
         scaleToggle.isOn = false;
 
-        // Set initial visibility
+        
         ApplyToggleState(false);
     }
 

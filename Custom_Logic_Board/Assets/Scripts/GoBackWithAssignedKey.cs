@@ -36,7 +36,7 @@ public class GoBackWithAssignedKey : MonoBehaviour
         return;
     }
 
-    // Handle number keys explicitly (0-9)
+  
     if (userKey.Length == 1 && char.IsDigit(userKey[0]))
     {
         int number = int.Parse(userKey);

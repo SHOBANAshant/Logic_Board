@@ -3,17 +3,17 @@ using UnityEngine;
 public class ModuleHandler : MonoBehaviour
 {
     public GameObject objectInputPanel;
-    public GameObject modulesPanel;  // <-- assign this in Inspector
+    public GameObject modulesPanel; 
 
     public void ShowObjectInputs()
     {
         objectInputPanel.SetActive(true);
-        modulesPanel.SetActive(false);  // Hide background module buttons
+        modulesPanel.SetActive(false);  
     }
 
     public void HideObjectInputs()
     {
         objectInputPanel.SetActive(false);
-        modulesPanel.SetActive(true);  // Show them again if needed
+        modulesPanel.SetActive(true); 
     }
 }

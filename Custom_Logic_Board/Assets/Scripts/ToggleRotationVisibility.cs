@@ -11,10 +11,10 @@ public class ToggleRotationVisibility : MonoBehaviour
 
     void Awake()
     {
-        // Ensure toggle starts unchecked
+        
         rotationToggle.isOn = false;
 
-        // Set initial visibility
+      
         ApplyToggleState(false);
     }
 

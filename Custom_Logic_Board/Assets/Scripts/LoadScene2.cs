@@ -10,7 +10,7 @@ public class LoadScene2 : MonoBehaviour
 
         if (!File.Exists(path))
         {
-            Debug.LogError("❌ Cannot load Scene2: data.json not found.");
+            Debug.LogError("Cannot load Scene2: data.json not found.");
             return;
         }
 
@@ -19,19 +19,14 @@ public class LoadScene2 : MonoBehaviour
 
         if (string.IsNullOrEmpty(data.returnKey))
         {
-            Debug.LogError("❌ Cannot load Scene2: returnKey is missing. Please assign a return key first.");
+            Debug.LogError("Cannot load Scene2: returnKey is missing. Please assign a return key.");
             return;
         }
 
-        // Optional: check if it's a valid KeyCode
-        KeyCode dummy;
-        if (!System.Enum.TryParse(data.returnKey, true, out dummy))
-        {
-            Debug.LogError($"❌ Cannot load Scene2: '{data.returnKey}' is not a valid key.");
-            return;
-        }
+       
+        
 
-        // Everything is fine, load Scene2
+        
         SceneManager.LoadScene("Scene2");
     }
 }

@@ -4,7 +4,11 @@ using System.IO;
 public class BuildAssetBundles {
     [MenuItem("Assets/Build AssetBundles")]
     static void BuildAllAssetBundles() {
-        string path = "Assets/AssetBundles";
+        string path = System.IO.Path.Combine(
+    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop),
+    "MyAssetBundles"
+);
+
         if (!Directory.Exists(path)) {
             Directory.CreateDirectory(path);
         }

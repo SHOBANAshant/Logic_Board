@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 public class AssetBundleLoader : MonoBehaviour
 {
     // URL of your AssetBundle (local server or cloud)
-    string bundleUrl = "http://localhost:8080/allprefabs";  // change if you upload to cloud
+    string bundleUrl = "http://localhost:8000/allprefabs";  // change if you upload to cloud
 
     IEnumerator Start()
     {

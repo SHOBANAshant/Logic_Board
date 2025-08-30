@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.IO;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class SaveObjectData : MonoBehaviour
 {
@@ -13,66 +13,54 @@ public class SaveObjectData : MonoBehaviour
 
     public void SaveData()
     {
-        // Safety check for null references
-        if (PrefabNameInput == null || PosXInput == null || PosYInput == null || PosZInput == null ||
-            RotXInput == null || RotYInput == null || RotZInput == null ||
-            ScaleXInput == null || ScaleYInput == null || ScaleZInput == null)
+        // Only Prefab Name is required
+        if (string.IsNullOrWhiteSpace(PrefabNameInput.text))
         {
-            Debug.LogError("❌ One or more input fields are not assigned in the Inspector.");
+            Debug.LogError("❌ Prefab Name is required.");
             return;
         }
 
-        // Check for empty fields
-        if (string.IsNullOrWhiteSpace(PrefabNameInput.text) ||
-            string.IsNullOrWhiteSpace(PosXInput.text) || string.IsNullOrWhiteSpace(PosYInput.text) || string.IsNullOrWhiteSpace(PosZInput.text) ||
-            string.IsNullOrWhiteSpace(RotXInput.text) || string.IsNullOrWhiteSpace(RotYInput.text) || string.IsNullOrWhiteSpace(RotZInput.text) ||
-            string.IsNullOrWhiteSpace(ScaleXInput.text) || string.IsNullOrWhiteSpace(ScaleYInput.text) || string.IsNullOrWhiteSpace(ScaleZInput.text))
-        {
-            Debug.LogError("⚠️ One or more fields are empty. Please fill all fields.");
-            return;
-        }
+        // --- Position (default 1,1,1) ---
+        float x = SafeParse(PosXInput.text, 1f);
+        float y = SafeParse(PosYInput.text, 1f);
+        float z = SafeParse(PosZInput.text, 1f);
 
-        // Parse input
-        float posX = float.Parse(PosXInput.text);
-        float posY = float.Parse(PosYInput.text);
-        float posZ = float.Parse(PosZInput.text);
+        // --- Rotation (default 1,1,1) ---
+        float rx = SafeParse(RotXInput.text, 1f);
+        float ry = SafeParse(RotYInput.text, 1f);
+        float rz = SafeParse(RotZInput.text, 1f);
 
-        float rotX = float.Parse(RotXInput.text);
-        float rotY = float.Parse(RotYInput.text);
-        float rotZ = float.Parse(RotZInput.text);
+        // --- Scale (default 1,1,1) ---
+        float sx = SafeParse(ScaleXInput.text, 1f);
+        float sy = SafeParse(ScaleYInput.text, 1f);
+        float sz = SafeParse(ScaleZInput.text, 1f);
 
-        float scaleX = float.Parse(ScaleXInput.text);
-        float scaleY = float.Parse(ScaleYInput.text);
-        float scaleZ = float.Parse(ScaleZInput.text);
-
-        // Create data
+        // Create object data
         ObjectData data = new ObjectData
         {
-            prefabName = PrefabNameInput.text.ToLower().Trim(), // lowercase to match Resources folder prefab
-            position = new Vector3(posX, posY, posZ),
-            rotation = new Vector3(rotX, rotY, rotZ),
-            scale = new Vector3(scaleX, scaleY, scaleZ),
-            returnKey = "" // Optional use
+            prefabName = PrefabNameInput.text.ToLower(),
+            position = new Vector3(x, y, z),
+            rotation = new Vector3(rx, ry, rz),
+            scale = new Vector3(sx, sy, sz),
+            returnKey = ""
         };
 
-        // Save as JSON
-        string json = JsonUtility.ToJson(data);
-        string path = Path.Combine(Application.persistentDataPath, "data.json");
-        File.WriteAllText(path, json);
+        // Convert to JSON & save
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(Application.persistentDataPath + "/data.json", json);
 
-        Debug.Log("✅ Data saved to: " + path);
+        Debug.Log("✅ Data saved at: " + Application.persistentDataPath + "/data.json");
 
-        // Load next scene (change to your actual scene name)
+        // Load next scene
         SceneManager.LoadScene("Scene10 1");
     }
 
-    [System.Serializable]
-    public class ObjectData
+    // Helper to safely parse float or use default
+    private float SafeParse(string input, float defaultValue)
     {
-        public string prefabName;
-        public Vector3 position;
-        public Vector3 rotation;
-        public Vector3 scale;
-        public string returnKey;
+        if (string.IsNullOrWhiteSpace(input)) return defaultValue;
+        if (float.TryParse(input, out float result))
+            return result;
+        return defaultValue;
     }
 }

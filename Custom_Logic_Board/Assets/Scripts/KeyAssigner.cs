@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using System.IO;
 
 public class KeyAssigner : MonoBehaviour
 {
@@ -8,8 +7,6 @@ public class KeyAssigner : MonoBehaviour
     public TMP_Text promptText;
     public GameObject modulesPanel;        
     private bool isListening = false;
-
-    private string prefabPath => Application.persistentDataPath + "/data.json";
 
     public void BeginKeyAssignment()
     {
@@ -33,32 +30,28 @@ public class KeyAssigner : MonoBehaviour
             {
                 if (Input.GetKeyDown(key))
                 {
-                    AssignKeyToJson(key);
+                    AssignKeyToProject(key);
                     break;
                 }
             }
         }
     }
 
-    private void AssignKeyToJson(KeyCode key)
+    private void AssignKeyToProject(KeyCode key)
     {
-        if (File.Exists(prefabPath))
+        ProjectData proj = ProjectManager.GetCurrentProject();
+        if (proj == null)
         {
-            string json = File.ReadAllText(prefabPath);
-            ObjectData data = JsonUtility.FromJson<ObjectData>(json);
-
-            data.returnKey = key.ToString();  
-            string updatedJson = JsonUtility.ToJson(data);
-            File.WriteAllText(prefabPath, updatedJson);
-
-            Debug.Log("Assigned return key: " + key);
-
-            promptText.text = "Key Assigned: " + key;
+            Debug.LogError("⚠️ No active project found. Please create/select a project first.");
+            return;
         }
-        else
-        {
-            Debug.LogError("data.json not found.");
-        }
+
+        proj.returnKey = key.ToString();
+        ProjectManager.Save();
+
+        Debug.Log("✅ Assigned return key: " + key);
+
+        promptText.text = "Key Assigned: " + key;
 
         isListening = false;
         Invoke("HidePrompt", 1.5f); 

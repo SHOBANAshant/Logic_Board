@@ -18,7 +18,7 @@ public class LoadObjectData : MonoBehaviour
         string path = Application.persistentDataPath + "/data.json";
         if (!File.Exists(path))
         {
-            Debug.LogError("❌ Data file not found: " + path);
+            Debug.LogError(" Data file not found: " + path);
             yield break;
         }
 
@@ -32,7 +32,7 @@ public class LoadObjectData : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("❌ Failed to download AssetBundle: " + www.error);
+            Debug.LogError("Failed to download AssetBundle: " + www.error);
             yield break;
         }
 
@@ -44,11 +44,11 @@ public class LoadObjectData : MonoBehaviour
         {
             GameObject obj = Instantiate(prefab, data.position, Quaternion.Euler(data.rotation));
             obj.transform.localScale = data.scale;
-            Debug.Log("✅ Instantiated prefab from bundle: " + data.prefabName);
+            Debug.Log("Instantiated prefab from bundle: " + data.prefabName);
         }
         else
         {
-            Debug.LogError("❌ Prefab not found in AssetBundle: " + data.prefabName);
+            Debug.LogError("Prefab not found in AssetBundle: " + data.prefabName);
         }
 
         // 4. Free memory (keep instantiated object alive)

@@ -1,68 +1,45 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
-using TMPro;
-
-
 
 public class GoBackWithAssignedKey : MonoBehaviour
 {
-    private string userKey = "";
-    private KeyCode keyCode;
-    private bool isInputMissing = false;
+    private KeyCode assignedKey;
+    private bool hasKeyAssigned = false;
 
-   void Start()
-{
-    string path = Application.persistentDataPath + "/data.json";
-
-    if (File.Exists(path))
+    void Start()
     {
-        string json = File.ReadAllText(path);
-        ObjectData data = JsonUtility.FromJson<ObjectData>(json);
-
-        userKey = data.returnKey;
-
-        if (string.IsNullOrEmpty(userKey))
+        ProjectData proj = ProjectManager.GetCurrentProject();
+        if (proj == null)
         {
-            isInputMissing = true;
-            Debug.LogWarning("Please enter a value");
+            Debug.LogWarning("⚠️ No active project selected.");
             return;
         }
-    }
-    else
-    {
-        isInputMissing = true;
-        Debug.LogWarning("data.json not found. Please create the file.");
-        return;
-    }
 
-  
-    if (userKey.Length == 1 && char.IsDigit(userKey[0]))
-    {
-        int number = int.Parse(userKey);
-        keyCode = KeyCode.Alpha0 + number;
-    }
-    else
-    {
-        if (!System.Enum.TryParse(userKey, true, out keyCode))
+        if (string.IsNullOrEmpty(proj.returnKey))
         {
-            isInputMissing = true;
-            Debug.LogWarning($"The key '{userKey}' is invalid. Please enter a valid KeyCode");
+            Debug.LogWarning("⚠️ No return key assigned for this project.");
+            return;
+        }
+
+        // Try parsing the saved key
+        if (System.Enum.TryParse(proj.returnKey, true, out assignedKey))
+        {
+            hasKeyAssigned = true;
+            Debug.Log("✅ Home key loaded: " + assignedKey);
+        }
+        else
+        {
+            Debug.LogWarning($"⚠️ Invalid key '{proj.returnKey}' in project {proj.projectName}");
         }
     }
-}
-
 
     void Update()
     {
-        if (isInputMissing)
-        {
-            return;
-        }
+        if (!hasKeyAssigned) return;
 
-        if (Input.GetKeyDown(keyCode))
+        if (Input.GetKeyDown(assignedKey))
         {
-            SceneManager.LoadScene("Scene10 1");
+            SceneManager.LoadScene("ProjectManager 1"); // go back to main scene
         }
     }
 }

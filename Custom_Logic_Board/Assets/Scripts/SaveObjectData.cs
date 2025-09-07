@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using System.IO;
 using UnityEngine.SceneManagement;
 using TMPro;
 
@@ -20,15 +18,23 @@ public class SaveObjectData : MonoBehaviour
             return;
         }
 
+        // Ensure a project is selected
+        ProjectData proj = ProjectManager.GetCurrentProject();
+        if (proj == null)
+        {
+            Debug.LogError("⚠️ No active project selected! Please create/select a project first.");
+            return;
+        }
+
         // --- Position (default 1,1,1) ---
         float x = SafeParse(PosXInput.text, 1f);
         float y = SafeParse(PosYInput.text, 1f);
         float z = SafeParse(PosZInput.text, 1f);
 
-        // --- Rotation (default 1,1,1) ---
-        float rx = SafeParse(RotXInput.text, 1f);
-        float ry = SafeParse(RotYInput.text, 1f);
-        float rz = SafeParse(RotZInput.text, 1f);
+        // --- Rotation (default 0,0,0) ---
+        float rx = SafeParse(RotXInput.text, 0f);
+        float ry = SafeParse(RotYInput.text, 0f);
+        float rz = SafeParse(RotZInput.text, 0f);
 
         // --- Scale (default 1,1,1) ---
         float sx = SafeParse(ScaleXInput.text, 1f);
@@ -41,17 +47,16 @@ public class SaveObjectData : MonoBehaviour
             prefabName = PrefabNameInput.text.ToLower(),
             position = new Vector3(x, y, z),
             rotation = new Vector3(rx, ry, rz),
-            scale = new Vector3(sx, sy, sz),
-            returnKey = ""
+            scale = new Vector3(sx, sy, sz)
         };
 
-        // Convert to JSON & save
-        string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(Application.persistentDataPath + "/data.json", json);
+        // Save object inside the project
+        proj.objects.Add(data);
+        ProjectManager.Save();
 
-        Debug.Log("✅ Data saved at: " + Application.persistentDataPath + "/data.json");
+        Debug.Log("✅ Object saved to project: " + proj.projectName);
 
-        // Load next scene
+        // Go back to editor scene
         SceneManager.LoadScene("Scene10 1");
     }
 

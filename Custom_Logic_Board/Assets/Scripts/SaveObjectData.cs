@@ -44,7 +44,7 @@ public class SaveObjectData : MonoBehaviour
         // Create object data
         ObjectData data = new ObjectData
         {
-            prefabName = PrefabNameInput.text.ToLower(),
+            prefabName = PrefabNameInput.text.Trim(),
             position = new Vector3(x, y, z),
             rotation = new Vector3(rx, ry, rz),
             scale = new Vector3(sx, sy, sz)

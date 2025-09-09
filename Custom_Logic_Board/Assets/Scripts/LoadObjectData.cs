@@ -10,21 +10,18 @@ public class LoadObjectData : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadDataAndPrefab());
+        StartCoroutine(LoadProjectObjects());
     }
 
-    IEnumerator LoadDataAndPrefab()
+    IEnumerator LoadProjectObjects()
     {
-        string path = Application.persistentDataPath + "/data.json";
-        if (!File.Exists(path))
+        // 1. Get current project
+        ProjectData proj = ProjectManager.GetCurrentProject();
+        if (proj == null)
         {
-            Debug.LogError(" Data file not found: " + path);
+            Debug.LogError("❌ No active project selected!");
             yield break;
         }
-
-        // 1. Read JSON data
-        string json = File.ReadAllText(path);
-        ObjectData data = JsonUtility.FromJson<ObjectData>(json);
 
         // 2. Download AssetBundle
         UnityWebRequest www = UnityWebRequestAssetBundle.GetAssetBundle(bundleUrl);
@@ -32,36 +29,42 @@ public class LoadObjectData : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.LogError("Failed to download AssetBundle: " + www.error);
+            Debug.LogError("❌ Failed to download AssetBundle: " + www.error);
             yield break;
         }
 
         AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(www);
+        string[] allAssets = bundle.GetAllAssetNames();
 
-        // 3. Load prefab from bundle
-        GameObject prefab = bundle.LoadAsset<GameObject>(data.prefabName);
-        if (prefab != null)
+        // 3. Loop through all objects in the project
+        foreach (ObjectData data in proj.objects)
         {
-            GameObject obj = Instantiate(prefab, data.position, Quaternion.Euler(data.rotation));
-            obj.transform.localScale = data.scale;
-            Debug.Log("Instantiated prefab from bundle: " + data.prefabName);
-        }
-        else
-        {
-            Debug.LogError("Prefab not found in AssetBundle: " + data.prefabName);
+            GameObject prefab = null;
+
+            foreach (string asset in allAssets)
+            {
+                string cleanName = Path.GetFileNameWithoutExtension(asset);
+
+                if (cleanName.Equals(data.prefabName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    prefab = bundle.LoadAsset<GameObject>(asset);
+                    break;
+                }
+            }
+
+            if (prefab != null)
+            {
+                GameObject obj = Instantiate(prefab, data.position, Quaternion.Euler(data.rotation));
+                obj.transform.localScale = data.scale;
+                Debug.Log("✅ Instantiated prefab: " + data.prefabName);
+            }
+            else
+            {
+                Debug.LogError("❌ Prefab not found in AssetBundle: " + data.prefabName);
+            }
         }
 
-        // 4. Free memory (keep instantiated object alive)
+        // 4. Unload bundle but keep loaded objects alive
         bundle.Unload(false);
-    }
-
-    [System.Serializable]
-    public class ObjectData
-    {
-        public string prefabName;
-        public Vector3 position;
-        public Vector3 rotation;
-        public Vector3 scale;
-        public string returnKey;
     }
 }

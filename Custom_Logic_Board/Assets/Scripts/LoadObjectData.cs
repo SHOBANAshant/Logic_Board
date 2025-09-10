@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 public class LoadObjectData : MonoBehaviour
 {
     // URL of your bundle file
-    string bundleUrl = "http://localhost:8080/allprefabs";
+    string bundleUrl = "http://localhost:8080/MyAssetBundles/allprefabs";
 
     void Start()
     {

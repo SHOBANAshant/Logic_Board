@@ -17,7 +17,6 @@ public class ProjectWindowUI : MonoBehaviour
 
     void Awake()
     {
-        // Load saved projects when scene starts
         ProjectManager.Load();
     }
 
@@ -41,28 +40,23 @@ public class ProjectWindowUI : MonoBehaviour
             return;
         }
 
-        // Create new project and add to ProjectManager
         ProjectData newProj = new ProjectData { projectName = newName };
         ProjectManager.projectList.projects.Add(newProj);
-        ProjectManager.Save(); // Save to disk immediately
+        ProjectManager.Save();
 
-        // Clear input
         projectNameInput.text = "";
 
-        // Refresh UI
+        // Refresh ScrollView to show the new project button
         RefreshProjectList();
 
-        // Automatically select the newly created project
-        OnProjectClicked(newProj);
+        // Do NOT auto-select or open the popup here.
     }
 
     public void RefreshProjectList()
     {
-        // Clear existing buttons
         foreach (Transform child in projectListParent)
             Destroy(child.gameObject);
 
-        // Create buttons for each project
         foreach (ProjectData proj in ProjectManager.projectList.projects)
         {
             GameObject btnObj = Instantiate(projectButtonPrefab, projectListParent);
@@ -78,7 +72,6 @@ public class ProjectWindowUI : MonoBehaviour
     {
         selectedProject = proj;
 
-        // Set current project index
         ProjectManager.currentProjectIndex = ProjectManager.projectList.projects.IndexOf(selectedProject);
 
         if (selectedProjectText != null)
@@ -86,9 +79,10 @@ public class ProjectWindowUI : MonoBehaviour
 
         if (optionsPopup != null)
             optionsPopup.SetActive(true);
+
+        Debug.Log($"📌 Selected project: {proj.projectName}");
     }
 
-    // ====== Option Popup Buttons ======
     public void OnEditClicked()
     {
         if (selectedProject == null) return;
@@ -109,8 +103,8 @@ public class ProjectWindowUI : MonoBehaviour
     {
         if (selectedProject == null) return;
 
-        Debug.Log("📌 Project: " + selectedProject.projectName);
-        Debug.Log("Home Key: " + selectedProject.returnKey);
+        Debug.Log($"📌 Project: {selectedProject.projectName}");
+        Debug.Log($"Home Key: {selectedProject.returnKey}");
 
         foreach (var obj in selectedProject.objects)
         {
@@ -120,29 +114,20 @@ public class ProjectWindowUI : MonoBehaviour
 
     public void OnClosePopup()
     {
-        // Delete the currently selected project if it exists
         if (selectedProject != null)
         {
-            // Remove from the list
             ProjectManager.projectList.projects.Remove(selectedProject);
-
-            // Save the updated list to disk
             ProjectManager.Save();
 
-            // Clear selection
             selectedProject = null;
 
             if (selectedProjectText != null)
                 selectedProjectText.text = "";
 
-            // Refresh the UI
             RefreshProjectList();
         }
 
-        // Close the popup panel
         if (optionsPopup != null)
             optionsPopup.SetActive(false);
-
-
     }
 }
